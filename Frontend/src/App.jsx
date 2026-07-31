@@ -7,7 +7,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 /* ─────────────────────────── Constants ─────────────────────────── */
-const API_URL = "http://127.0.0.1:8000/predict";
+const API_URL = "https://food-delivery-prediction-qd80.onrender.com/predict";
 
 const WEATHER_OPTIONS  = ["Sunny", "Cloudy", "Rainy", "Snowy", "Windy", "Foggy"];
 const TRAFFIC_OPTIONS  = ["Low", "Medium", "High"];
