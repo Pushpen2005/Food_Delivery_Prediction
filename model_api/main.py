@@ -2,8 +2,24 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
 import pandas as pd
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+    
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:5175",
+        "http://localhost:5176",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 model = joblib.load("Food_Delivery_Model.joblib")
 
@@ -18,24 +34,23 @@ class InputData(BaseModel):
     Preparation_Time_min: float
     Courier_Experience_yrs: float
 
-
 @app.get("/")
 def root():
     return {"message": "Welcome to the Model API!"}
 
 
 @app.post("/predict")
-def predict(input_data: InputData):
+def predict(data: InputData):
     try:
         input_row = pd.DataFrame([{
-            "Order_ID": input_data.Order_ID,
-            "Distance_km": input_data.Distance_km,
-            "Weather": input_data.Weather,
-            "Traffic_Level": input_data.Traffic_Level,
-            "Time_of_Day": input_data.Time_of_Day,
-            "Vehicle_Type": input_data.Vehicle_Type,
-            "Preparation_Time_min": input_data.Preparation_Time_min,
-            "Courier_Experience_yrs": input_data.Courier_Experience_yrs
+            "Order_ID": data.Order_ID,
+            "Distance_km": data.Distance_km,
+            "Weather": data.Weather,
+            "Traffic_Level": data.Traffic_Level,
+            "Time_of_Day": data.Time_of_Day,
+            "Vehicle_Type": data.Vehicle_Type,
+            "Preparation_Time_min": data.Preparation_Time_min,
+            "Courier_Experience_yrs": data.Courier_Experience_yrs
         }])
 
         prediction = model.predict(input_row)[0]
